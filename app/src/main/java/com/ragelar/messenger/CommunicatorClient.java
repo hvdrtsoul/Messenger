@@ -109,7 +109,7 @@ public class CommunicatorClient {
         }
 
         RequestSender sender = new RequestSender(request, sharedKey);
-        sender.run();
+        sender.start();
 
         return sender.getResponse();
     }
@@ -131,7 +131,7 @@ public class CommunicatorClient {
         }
 
         RequestSender sender = new RequestSender(request, sharedKey);
-        sender.run();
+        sender.start();
 
         return sender.getResponse();
     }
@@ -150,7 +150,7 @@ public class CommunicatorClient {
         }
 
         RequestSender sender = new RequestSender(request, sharedKey);
-        sender.run();
+        sender.start();
 
         return sender.getResponse();
     }
@@ -168,7 +168,7 @@ public class CommunicatorClient {
         }
 
         RequestSender sender = new RequestSender(request, sharedKey);
-        sender.run();
+        sender.start();
 
         return sender.getResponse();
     }
@@ -188,7 +188,7 @@ public class CommunicatorClient {
         }
 
         RequestSender sender = new RequestSender(request, sharedKey);
-        sender.run();
+        sender.start();
 
         return sender.getResponse();
     }

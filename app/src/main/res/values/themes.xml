@@ -3,6 +3,8 @@
     <style name="Theme.Messenger" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">#FFC857</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="backgroundColor">#FAFAFF</item>
         <item name="colorPrimaryVariant">#F5A300</item>
         <item name="colorOnPrimary">#141414</item>
         <!-- Secondary brand color. -->

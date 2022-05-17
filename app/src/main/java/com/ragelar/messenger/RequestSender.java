@@ -1,6 +1,9 @@
 package com.ragelar.messenger;
 
 
+import android.util.Log;
+import android.widget.Toast;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -183,6 +186,7 @@ public class RequestSender extends Thread{
                 response = new JSONObject();
             e.printStackTrace();
             try {
+                Log.i("TEST", "GOT IO EXCEPTION");
                 response.put(Constants.RESPONSE_HEADER_NAME, Constants.RESPONSE_HEADER_ERROR);
                 response.put(Constants.ADDITIONAL_INFO_HEADER, Constants.SOMETHING_WENT_WRONG_MESSAGE);
             } catch (JSONException ex) {

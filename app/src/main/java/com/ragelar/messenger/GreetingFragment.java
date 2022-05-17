@@ -2,11 +2,16 @@ package com.ragelar.messenger;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,5 +65,23 @@ public class GreetingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_greeting, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        final NavController navController = Navigation.findNavController(view);
+        Button loginButton = view.findViewById(R.id.buttonLogIn);
+        Button registerButton = view.findViewById(R.id.buttonRegister);
+
+        registerButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_greetingFragment_to_secretPhraseFragment);
+        });
+
+        loginButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_greetingFragment_to_logInFragment);
+        });
+
     }
 }
