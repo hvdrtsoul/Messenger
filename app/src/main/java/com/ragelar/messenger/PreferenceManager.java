@@ -25,6 +25,7 @@ public class PreferenceManager {
     public static final String KEY_PRIVATE_KEY = "privateKey";
     public static final String KEY_SESSION = "session";
     public static final String KEY_SHARED_KEY = "sharedKey";
+    public static final String KEY_NICKNAME = "nickName";
 
     public PreferenceManager(Context context){
         this._context = context;
@@ -34,6 +35,11 @@ public class PreferenceManager {
 
     public void setUserName(String userName){
         editor.putString(KEY_USERNAME, userName);
+        editor.commit();
+    }
+
+    public void setNickName(String nickName){
+        editor.putString(KEY_NICKNAME, nickName);
         editor.commit();
     }
 
@@ -73,6 +79,8 @@ public class PreferenceManager {
     public String getSharedKey(){
         return preferences.getString(KEY_SHARED_KEY, "undefined");
     }
+
+    public String getNickName() { return preferences.getString(KEY_NICKNAME, "undefined");}
 
     public void clearSession(){
         editor.clear();

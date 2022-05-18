@@ -176,6 +176,7 @@ public class LogInFragment extends Fragment {
                 }
 
             }
+
             String challenge = "";
             JSONObject jsonResponse = CommunicatorClient.sendAuthRequest(userNameText, sharedKey);
             try{
@@ -202,6 +203,9 @@ public class LogInFragment extends Fragment {
             byte[] seed = rabbitHole.getOut(words);
             ANomalUSProvider anomalusProvider = new ANomalUSProvider();
             Sanitizer sanitizer = new Sanitizer();
+
+
+            Arrays.asList(seed).add(0, new byte[]{(byte)0x4f});
 
             BigInteger privateKey = new BigInteger(seed);
 

@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         preferenceManager = new PreferenceManager(LoginActivity.this);
-        preferenceManager.clearSession();
+        //preferenceManager.clearSession();
         if(!preferenceManager.isLoggedIn()) {
             preferenceManager.clearSession();
             establishConnection();

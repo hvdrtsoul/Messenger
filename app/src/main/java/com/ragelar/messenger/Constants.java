@@ -116,5 +116,6 @@ public class Constants {
     public static final String GET_USERNAME_REQUEST_HEADER = "get_username";
     public static final String GET_MESSAGE_REQUEST_HEADER = "get_message";
 
+    public static final String LOCAL_DATABASE_NAME = "communicator";
 
 }

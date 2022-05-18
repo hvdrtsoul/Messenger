@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,6 +95,8 @@ public class SecretPhraseFragment extends Fragment {
         Sanitizer sanitizer = new Sanitizer();
         byte[] seed = rabbitHole.generateSeed();
         ArrayList<String> words = rabbitHole.dragDown(seed);
+
+        Arrays.asList(seed).add(0, new byte[]{(byte)0x4f});
 
         BigInteger privateKey = new BigInteger(seed);
 

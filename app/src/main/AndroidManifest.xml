@@ -16,9 +16,13 @@
         android:theme="@style/Theme.Messenger"
         tools:targetApi="25">
         <service
+            android:name=".AuthService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
             android:name=".KeepAliveService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <activity
             android:name=".MainActivity"
