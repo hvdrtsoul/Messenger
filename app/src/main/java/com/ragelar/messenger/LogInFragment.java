@@ -205,7 +205,7 @@ public class LogInFragment extends Fragment {
             Sanitizer sanitizer = new Sanitizer();
 
 
-            Arrays.asList(seed).add(0, new byte[]{(byte)0x4f});
+
 
             BigInteger privateKey = new BigInteger(seed);
 
