@@ -1,77 +1,99 @@
 package com.ragelar.messenger;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.room.Room;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MessagesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 public class MessagesFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    List<Dialog> dialogs = new ArrayList<>();
 
     public MessagesFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MessagesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MessagesFragment newInstance(String param1, String param2) {
-        MessagesFragment fragment = new MessagesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private void getDialogs(Context appContext){
+        class GetTask extends AsyncTask<Void, Void, List<Dialog>> {
+            @Override
+            protected List<Dialog> doInBackground(Void... voids) {
+                List<Dialog> dialogs = DatabaseClient.getInstance(appContext).getAppDatabase()
+                        .dialogDao().getAll();
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+                return dialogs;
+            }
+        }
+
+        GetTask getTask = new GetTask();
+        getTask.execute();
+
+        try {
+            this.dialogs = getTask.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            Toast.makeText(appContext, "Ошибка при загрузке списка диалогов. Пожалуйста, попробуйте ещё раз", Toast.LENGTH_SHORT).show();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Toast.makeText(appContext, "Ошибка при загрузке списка диалогов. Пожалуйста, попробуйте ещё раз", Toast.LENGTH_SHORT).show();
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_messages, container, false);
+    private void insertDialog(Context appContext){
+        class InsertTask extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Dialog dialog = new Dialog();
+
+                dialog.setDialogId(90);
+                dialog.setUserName("TEST");
+                dialog.setLastMessage("TEST LAST MESSAGE");
+                DatabaseClient.getInstance(appContext).getAppDatabase()
+                        .dialogDao().addDialog(dialog);
+
+                return null;
+            }
+        }
+
+        InsertTask insertTask = new InsertTask();
+        insertTask.execute();
     }
+
+
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        AppDatabase database = Room.databaseBuilder(this.getActivity().getApplicationContext(), AppDatabase.class, Constants.LOCAL_DATABASE_NAME).build();
 
+        RecyclerView recyclerView = view.findViewById(R.id.dialogs_l);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
+        getDialogs(this.getActivity().getApplicationContext());
+        DialogApadter adapter = new DialogApadter(this.getContext(), this.dialogs);
+
+        recyclerView.setAdapter(adapter);
+
+        Button testButton = view.findViewById(R.id.button2);
+
+        testButton.setOnClickListener(v -> {
+            insertDialog(this.getActivity().getApplicationContext());
+        });
 
 
     }
+
+
 }

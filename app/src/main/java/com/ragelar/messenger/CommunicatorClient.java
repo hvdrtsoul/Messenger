@@ -1,6 +1,8 @@
 package com.ragelar.messenger;
 
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,6 +22,8 @@ public class CommunicatorClient {
 
         RequestSender sender = new RequestSender(request);
         sender.start();
+
+        Log.d("TEST", request.toString());
 
         return sender.getResponse();
     }

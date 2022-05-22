@@ -3,12 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/messagesFragment">
-    <fragment
-        android:id="@+id/messagesFragment"
-        android:name="com.ragelar.messenger.MessagesFragment"
-        android:label="fragment_messages"
-        tools:layout="@layout/fragment_messages" />
+    app:startDestination="@id/dialogsFragment">
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.ragelar.messenger.SettingsFragment"
@@ -28,4 +23,22 @@
             app:destination="@id/settingsFragment"
             app:popUpTo="@id/settingsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/dialogsFragment"
+        android:name="com.ragelar.messenger.DialogsFragment"
+        android:label="fragment_dialogs"
+        tools:layout="@layout/fragment_dialogs" >
+        <action
+            android:id="@+id/action_dialogsFragment_to_addDialogFragment"
+            app:destination="@id/addDialogFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/addDialogFragment"
+        android:name="com.ragelar.messenger.AddDialogFragment"
+        android:label="fragment_add_dialog"
+        tools:layout="@layout/fragment_add_dialog" />
 </navigation>

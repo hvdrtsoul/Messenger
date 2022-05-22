@@ -2,28 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frameLayout7"
+    android:id="@+id/frameLayout10"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SetNickNameFragment">
-
-    <Button
-        android:id="@+id/confirmSetNickNameButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:fontFamily="sans-serif-medium"
-        android:text="ПРОДОЛЖИТЬ"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editNickName" />
+    tools:context=".AddDialogFragment">
 
     <EditText
-        android:id="@+id/editNickName"
-        android:layout_width="228dp"
+        android:id="@+id/editNewDialogUsername"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="128dp"
         android:background="@drawable/rounded_textview"
         android:ems="10"
         android:fontFamily="sans-serif"
@@ -33,33 +21,44 @@
         android:textColor="@color/cool_black"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView20"
-        tools:text="nickname" />
+        app:layout_constraintTop_toBottomOf="@+id/textView31"
+        tools:text="!nickname" />
 
-    <TextView
-        android:id="@+id/textView20"
+    <Button
+        android:id="@+id/confirmAddDialogButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:text="ВЫБРАТЬ ПСЕВДОНИМ"
-        android:textAlignment="center"
-        android:textSize="30sp"
+        android:fontFamily="sans-serif-medium"
+        android:text="ПРОДОЛЖИТЬ"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView25"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/editNewDialogUsername" />
 
     <TextView
-        android:id="@+id/textView18"
+        android:id="@+id/textView25"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="128dp"
-        android:text="Ваше имя пользователя генерируется случайно и не может быть изменено. Однако у вас есть возможность выбрать себе один псевдоним"
+        android:text="Вы можете добавить собеседника по имени пользователя или псевдониму          (!nickname). Обмениваться сообщениями можно будет начать только после завершения обмена ключами."
         android:textAlignment="center"
         android:textColor="@color/cool_black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView31"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="ДОБАВИТЬ СОБЕСЕДНИКА"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

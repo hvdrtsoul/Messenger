@@ -86,7 +86,7 @@ public class SetNickNameFragment extends Fragment {
             try{
                 if(jsonResponse.getString("result").equals("OK")){
                     Toast.makeText(this.getContext(), "Имя пользоваетеля успешно установлено.", Toast.LENGTH_LONG);
-                    preferenceManager.setNickName(editNickName.getText().toString());
+                    preferenceManager.setNickName("!" + editNickName.getText().toString());
                     final NavController navController = Navigation.findNavController(view);
                     navController.navigate(R.id.action_setNickNameFragment_to_settingsFragment);
                 }

@@ -3,27 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/drawable/communication.xml" value="0.1545" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/drawable/correct.xml" value="0.1785" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/drawable/rounded_corner.xml" value="0.1785" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/drawable/rounded_textview.xml" value="0.1785" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/drawable/settings.xml" value="0.1545" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/activity_login.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/activity_main.xml" value="0.5" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_dialog.xml" value="0.5" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_greeting.xml" value="0.8333333333333334" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_log_in.xml" value="0.4466666666666667" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_messages.xml" value="0.13333333333333333" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_secret_phrase.xml" value="0.14666666666666667" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_set_nick_name.xml" value="0.22" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_settings.xml" value="0.3333333333333333" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_user_name.xml" value="0.22" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.14791666666666667" />
+        <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/drawable/communication.xml" value="0.351" />
+        <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/drawable/rounded_button.xml" value="0.2145" />
         <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/drawable/rounded_corner.xml" value="0.387" />
+        <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/drawable/rounded_cornew_dialog.xml" value="0.351" />
         <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/layout/activity_login.xml" value="0.358695652173913" />
-        <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/layout/activity_main.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/layout/activity_main.xml" value="0.18" />
+        <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_add_dialog.xml" value="0.33" />
+        <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_dialog.xml" value="0.5" />
+        <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_dialogs.xml" value="0.22" />
         <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_greeting.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_log_in.xml" value="0.14722222222222223" />
+        <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_messages.xml" value="0.18" />
+        <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_set_nick_name.xml" value="0.18819655521783182" />
+        <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_settings.xml" value="0.1897644927536232" />
         <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_user_name.xml" value="0.33" />
+        <entry key="..\:/Users/kd004/AndroidStudioProjects/Messenger/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.2015625" />
       </map>
     </option>
   </component>
