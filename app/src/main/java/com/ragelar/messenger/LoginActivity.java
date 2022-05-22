@@ -64,41 +64,31 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Log.i("TEST","IN ON CREATE");
-
         preferenceManager = new PreferenceManager(LoginActivity.this);
-
-
-        establishConnection();
-        SystemClock.sleep(3000);
-        while(preferenceManager.getSharedKey().equals("undefined")){
-            SystemClock.sleep(5000);
-            showToast("Невозможно установить безопасное соединение с сервером. Пробую снова...");
+        //preferenceManager.clearSession();
+        if(!preferenceManager.isLoggedIn()) {
+            preferenceManager.clearSession();
             establishConnection();
-        }
-
-        Handler handler = new Handler();
-        Runnable keepAliveTask = new Runnable() {
-            @Override
-            public void run() {
-                CommunicatorClient.sendKeepAliveRequest();
-                handler.postDelayed(this, 300_000);
+            SystemClock.sleep(3000);
+            while (preferenceManager.getSharedKey().equals("undefined")) {
+                SystemClock.sleep(5000);
+                showToast("Невозможно установить безопасное соединение с сервером. Пробую снова...");
+                establishConnection();
             }
-        };
-        keepAliveTask.run();
-
+            Intent intention = new Intent(LoginActivity.this, KeepAliveService.class);
+            startService(intention);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         if(preferenceManager.isLoggedIn()){
             Intent intention = new Intent(LoginActivity.this, MainActivity.class);
             intention.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intention);
 
-            finish();
+            //finish();
         }
     }
 }

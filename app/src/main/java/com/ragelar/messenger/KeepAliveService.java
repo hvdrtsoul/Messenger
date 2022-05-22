@@ -4,6 +4,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class KeepAliveService extends Service {
     public KeepAliveService() {
@@ -24,15 +28,30 @@ public class KeepAliveService extends Service {
         super.onCreate();
 
         Handler handler = new Handler();
+        Runnable keepAliveTask = new Runnable() {
+            @Override
+            public void run() {
+                JSONObject jsonResponse = CommunicatorClient.sendKeepAliveRequest();
 
+                try {
+                    if(jsonResponse.getString("result").equals("OK")) {
+                        handler.postDelayed(this, 300_000);
+                        //Toast.makeText(KeepAliveService.this, "KEEP ALIVE", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        handler.postDelayed(this, 300_000);
+                        PreferenceManager preferenceManager = new PreferenceManager(KeepAliveService.this);
+                        preferenceManager.setSharedKey("undefined");
+                        Toast.makeText(KeepAliveService.this, "CANNOT KEEP CONNECTION ALIVE. PLEASE, CHECK INTERNET CONNECTION", Toast.LENGTH_SHORT).show();
+                    }
 
-            handler.postDelayed(new Runnable() {
-               @Override
-                public void run() {
-                    CommunicatorClient.sendKeepAliveRequest();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-             }, 1000);
-        }
+            }
+        };
+        keepAliveTask.run();
 
 
+    }
 }

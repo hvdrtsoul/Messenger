@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/messagesFragment">
+    <fragment
+        android:id="@+id/messagesFragment"
+        android:name="com.ragelar.messenger.MessagesFragment"
+        android:label="fragment_messages"
+        tools:layout="@layout/fragment_messages" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.ragelar.messenger.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_setNickNameFragment"
+            app:destination="@id/setNickNameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/setNickNameFragment"
+        android:name="com.ragelar.messenger.SetNickNameFragment"
+        android:label="fragment_set_nick_name"
+        tools:layout="@layout/fragment_set_nick_name" >
+        <action
+            android:id="@+id/action_setNickNameFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:popUpTo="@id/settingsFragment" />
+    </fragment>
+</navigation>
