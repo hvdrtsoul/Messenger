@@ -46,6 +46,7 @@ public class DialogsFragment extends Fragment implements DialogApadter.OnDialogL
     List<Dialog> dialogs = new ArrayList<>();
     Context appContext;
     NavController navController;
+    boolean datasetChanged;
 
     public DialogsFragment() {
         // Required empty public constructor
@@ -114,8 +115,11 @@ public class DialogsFragment extends Fragment implements DialogApadter.OnDialogL
         getTask.execute();
 
         try {
+            List<Dialog> newDialogs = getTask.get();
+            if(newDialogs.size() > this.dialogs.size())
+                this.datasetChanged = true;
             this.dialogs.clear();
-            this.dialogs.addAll(getTask.get());
+            this.dialogs.addAll(newDialogs);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             Toast.makeText(appContext, "Ошибка при загрузке списка диалогов. Пожалуйста, попробуйте ещё раз", Toast.LENGTH_SHORT).show();
@@ -160,7 +164,10 @@ public class DialogsFragment extends Fragment implements DialogApadter.OnDialogL
             @Override
             public void run() {
                         getDialogs(appContext);
-                        adapter.notifyDataSetChanged();
+                        if(datasetChanged) {
+                            adapter.notifyDataSetChanged();
+                            datasetChanged = false;
+                        }
                         handler.postDelayed(this, 5000);
                     }
             };

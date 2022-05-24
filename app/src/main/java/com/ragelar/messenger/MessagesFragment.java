@@ -37,6 +37,7 @@ public class MessagesFragment extends Fragment {
     String userName;
     List<Message> messages = new ArrayList<>();
     Context appContext;
+    boolean datasetChanged = false;
 
     public MessagesFragment() {
         // Required empty public constructor
@@ -77,8 +78,11 @@ public class MessagesFragment extends Fragment {
         getTask.execute();
 
         try{
+            List<Message> newMessages = getTask.get();
+            if(newMessages.size() > this.messages.size())
+                this.datasetChanged = true;
             this.messages.clear();
-            this.messages.addAll(getTask.get());
+            this.messages.addAll(newMessages);
             this.messages.sort(new MessageComparator());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
@@ -176,8 +180,11 @@ public class MessagesFragment extends Fragment {
             @Override
             public void run() {
                 getMessages(appContext, userName);
-                adapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(adapter.getItemCount()-1);
+                if(datasetChanged) {
+                    adapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                    datasetChanged = false;
+                }
                 handler.postDelayed(this, 1000);
             }
         };
@@ -193,6 +200,9 @@ public class MessagesFragment extends Fragment {
             Sanitizer sanitizer = new Sanitizer();
 
             String messageToSend = inputMessage.getText().toString();
+
+            if(messageToSend.isEmpty())
+                return;
 
             if(messageToSend.length() > 50){
                 Toast.makeText(appContext, "Длина сообщения не может превышать 50 символов", Toast.LENGTH_SHORT).show();

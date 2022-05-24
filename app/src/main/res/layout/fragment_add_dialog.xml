@@ -45,7 +45,7 @@
         android:layout_marginBottom="128dp"
         android:text="Вы можете добавить собеседника по имени пользователя или псевдониму          (!nickname). Обмениваться сообщениями можно будет начать только после завершения обмена ключами."
         android:textAlignment="center"
-        android:textColor="@color/design_default_color_on_primary"
+        android:textColor="@color/cool_black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
