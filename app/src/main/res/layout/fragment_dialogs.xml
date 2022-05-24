@@ -9,16 +9,15 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dialogs_list"
-        android:layout_width="409dp"
-        android:layout_height="729dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="false"
+        android:isScrollContainer="false"
         android:scrollbars="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/fragment_dialog"
-        android:focusableInTouchMode="false"
-        android:isScrollContainer="false"/>
+        tools:listitem="@layout/fragment_dialog" />
 
     <Button
         android:id="@+id/addDialogButton"

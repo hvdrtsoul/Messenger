@@ -5,6 +5,7 @@
     android:id="@+id/frameLayout10"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cool_white"
     tools:context=".AddDialogFragment">
 
     <EditText
@@ -44,7 +45,7 @@
         android:layout_marginBottom="128dp"
         android:text="Вы можете добавить собеседника по имени пользователя или псевдониму          (!nickname). Обмениваться сообщениями можно будет начать только после завершения обмена ключами."
         android:textAlignment="center"
-        android:textColor="@color/cool_black"
+        android:textColor="@color/design_default_color_on_primary"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

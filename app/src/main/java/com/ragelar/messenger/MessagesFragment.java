@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,6 +125,22 @@ public class MessagesFragment extends Fragment {
         }
     }
 
+    private void setLastMessage(Context appContext, Pair<String, String> info) {
+        class SetTask extends AsyncTask<Pair<String, String>, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Pair<String, String>... pairs) {
+                DatabaseClient.getInstance(appContext).getAppDatabase()
+                        .dialogDao().setLastMessage(info.first, info.second);
+
+                return null;
+            }
+        }
+
+        SetTask task = new SetTask();
+        task.execute(info);
+    }
+
 
 
     @Override
@@ -216,6 +233,7 @@ public class MessagesFragment extends Fragment {
             messageToInsert.setData(messageToSend);
 
             insertMessage(appContext, messageToInsert);
+            setLastMessage(appContext, Pair.create(userName, messageToSend));
             inputMessage.getText().clear();
             adapter.notifyDataSetChanged();
         });
