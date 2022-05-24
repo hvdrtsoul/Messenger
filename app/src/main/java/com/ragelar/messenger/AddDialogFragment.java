@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigInteger;
+import java.util.concurrent.ExecutionException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -107,6 +108,28 @@ public class AddDialogFragment extends Fragment {
         task.execute(message);
     }
 
+    private Boolean dialogExists(Context appContext, String userName) {
+        class GetTask extends AsyncTask<String, Void, Boolean> {
+
+            @Override
+            protected Boolean doInBackground(String... strings) {
+                return DatabaseClient.getInstance(appContext).getAppDatabase()
+                        .dialogDao().dialogExists(userName);
+
+            }
+        }
+
+        GetTask task = new GetTask();
+        task.execute(userName);
+
+        try {
+            return task.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return true;
+        }
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -139,6 +162,12 @@ public class AddDialogFragment extends Fragment {
 
             }
 
+            if(dialogExists(this.getActivity().getApplicationContext(), userNameText)){
+                Toast.makeText(this.getContext(), "Диалог с этим пользователем уже существует", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+
             DFHProvider dfhProvider = new DFHProvider();
             Sanitizer sanitizer = new Sanitizer();
 
@@ -155,7 +184,7 @@ public class AddDialogFragment extends Fragment {
 
                     Dialog dialog = new Dialog();
 
-                    dialog.setUserName(userName.getText().toString());
+                    dialog.setUserName(userNameText);
                     dialog.setLastMessage("ОТПРАВЛЕН ПУБЛИЧНЫЙ КЛЮЧ");
                     dialog.setPrivateKey(privateKey.toString());
 

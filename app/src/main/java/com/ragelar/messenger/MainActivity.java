@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
         //preferenceManager.clearSession();
 
             establishConnection();
-            SystemClock.sleep(3000);
+            //SystemClock.sleep(3000);
             while (preferenceManager.getSharedKey().equals("undefined")) {
-                SystemClock.sleep(5000);
+                //SystemClock.sleep(5000);
                 showToast("Невозможно установить безопасное соединение с сервером. Пробую снова...");
                 establishConnection();
             }
@@ -91,6 +91,11 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment hostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentMainContainer);
         NavController navController = hostFragment.getNavController();
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
+        bottomNavigationView.setOnItemReselectedListener(item -> {
+            int newDestination = item.getItemId();
+            navController.popBackStack(newDestination, false);
+        });
 
         Intent intention = new Intent(MainActivity.this, AuthService.class);
         startService(intention);

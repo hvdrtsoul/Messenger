@@ -1,7 +1,9 @@
 package com.ragelar.messenger;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,9 +75,25 @@ public class SettingsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 
+    private void clearDatabase(Context appContext) {
+        class SetTask extends AsyncTask<Void, Void, Void> {
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+                DatabaseClient.getInstance(appContext).getAppDatabase().clearAllTables();
+                return null;
+            }
+        }
+
+        SetTask task = new SetTask();
+        task.execute();
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Context appContext = this.getContext().getApplicationContext();
 
         PreferenceManager preferenceManager = new PreferenceManager(this.getContext());
         final NavController navController = Navigation.findNavController(view);
@@ -94,11 +113,12 @@ public class SettingsFragment extends Fragment {
         FragmentActivity activity = this.getActivity();
 
         logOutButton.setOnClickListener(v -> {
-            new AlertDialog.Builder(this.getContext()).setMessage("Вы действительно хотите выйти?").setPositiveButton("ДА",
+            new AlertDialog.Builder(this.getContext()).setMessage("Вы действительно хотите выйти? Сообщения, сохранённые на устройстве, также будут удалены без возможности восстановления").setPositiveButton("ДА",
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             preferenceManager.clearSession();
+                            clearDatabase(appContext);
                             activity.finishAffinity();
 
                         }

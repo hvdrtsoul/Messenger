@@ -16,10 +16,12 @@ public class DialogApadter extends RecyclerView.Adapter<DialogApadter.ViewHolder
 
     private final LayoutInflater inflater;
     private final List<Dialog> dialogs;
+    private OnDialogListener onDialogListener;
 
-    public DialogApadter(Context context, List<Dialog> dialogs) {
+    public DialogApadter(Context context, List<Dialog> dialogs, OnDialogListener onDialogListener) {
         this.dialogs = dialogs;
         this.inflater = LayoutInflater.from(context);
+        this.onDialogListener = onDialogListener;
     }
 
 
@@ -27,7 +29,7 @@ public class DialogApadter extends RecyclerView.Adapter<DialogApadter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.fragment_dialog, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, onDialogListener);
     }
 
     @Override
@@ -42,15 +44,28 @@ public class DialogApadter extends RecyclerView.Adapter<DialogApadter.ViewHolder
         return dialogs.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         final TextView userName;
         final TextView lastMessage;
+        OnDialogListener onDialogListener;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnDialogListener onDialogListener) {
             super(itemView);
             userName = itemView.findViewById(R.id.userNameText);
             lastMessage = itemView.findViewById(R.id.lastMessageText);
+            this.onDialogListener = onDialogListener;
+
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            onDialogListener.onDialogCLick(getAbsoluteAdapterPosition());
+        }
+    }
+
+    public interface OnDialogListener{
+        void onDialogCLick(int position);
     }
 }

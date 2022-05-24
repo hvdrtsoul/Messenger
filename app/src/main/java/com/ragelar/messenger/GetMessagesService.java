@@ -69,10 +69,15 @@ public class GetMessagesService extends Service {
 
             @Override
             protected String doInBackground(String... strings) {
-                DatabaseClient.getInstance(appContext).getAppDatabase()
+                String privateKey = DatabaseClient.getInstance(appContext).getAppDatabase()
                         .dialogDao().getPrivateKeyForUser(userName);
+                return privateKey;
+            }
 
-                return null;
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
             }
         }
 
@@ -92,10 +97,9 @@ public class GetMessagesService extends Service {
 
             @Override
             protected String doInBackground(String... strings) {
-                DatabaseClient.getInstance(appContext).getAppDatabase()
+                return DatabaseClient.getInstance(appContext).getAppDatabase()
                         .dialogDao().getSharedKeyForUser(userName);
 
-                return null;
             }
         }
 
@@ -240,10 +244,10 @@ public class GetMessagesService extends Service {
         super.onCreate();
 
         Handler handler = new Handler();
+        PreferenceManager preferenceManager = new PreferenceManager(GetMessagesService.this);
         Runnable getMessagesTask = new Runnable() {
             @Override
             public void run() {
-                PreferenceManager preferenceManager = new PreferenceManager(GetMessagesService.this);
                 JSONObject jsonResponse = CommunicatorClient.sendCheckMailRequest(preferenceManager.getUserName(), preferenceManager.getSession(), preferenceManager.getSharedKey());
                 String messages = "";
 
@@ -253,7 +257,7 @@ public class GetMessagesService extends Service {
                         messages = data.getString(Constants.CHECK_MAIL_MESSAGES_HEADER_NAME);//Toast.makeText(KeepAliveService.this, "KEEP ALIVE", Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        handler.postDelayed(this, 3000);
+                        handler.postDelayed(this, 7000);
                         Toast.makeText(GetMessagesService.this, "Что-то пошло не так при получении новых сообщений...", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -265,7 +269,7 @@ public class GetMessagesService extends Service {
                 }
 
                 if(messages.equals(Constants.CHECK_MAIL_NO_MESSAGES)){
-                    handler.postDelayed(this, 3000);
+                    handler.postDelayed(this, 7000);
                     return;
                 }
 
@@ -286,18 +290,18 @@ public class GetMessagesService extends Service {
                             String messageData = data.getString(Constants.GET_MESSAGE_DATA_HEADER);
 
                             handleIncomingMessage(messageFrom, messageType, messageTimestamp, messageData);
-                            handler.postDelayed(this, 3000);
+                            handler.postDelayed(this, 7000);
                             return;
                         }
                         else{
-                            handler.postDelayed(this, 3000);
+                            handler.postDelayed(this, 7000);
                             Toast.makeText(GetMessagesService.this, "Что-то пошло не так при получении новых сообщений...", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        handler.postDelayed(this, 3000);
+                        handler.postDelayed(this, 7000);
                         Toast.makeText(GetMessagesService.this, "Что-то пошло не так при получении новых сообщений...", Toast.LENGTH_SHORT).show();
                         return;
                     }

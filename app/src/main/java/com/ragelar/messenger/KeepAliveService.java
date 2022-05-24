@@ -35,11 +35,11 @@ public class KeepAliveService extends Service {
 
                 try {
                     if(jsonResponse.getString("result").equals("OK")) {
-                        handler.postDelayed(this, 3000);
-                        Toast.makeText(KeepAliveService.this, "KEEP ALIVE", Toast.LENGTH_SHORT).show();
+                        handler.postDelayed(this, 300_000);
+                        //Toast.makeText(KeepAliveService.this, "KEEP ALIVE", Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        handler.postDelayed(this, 3000);
+                        handler.postDelayed(this, 300_000);
                         PreferenceManager preferenceManager = new PreferenceManager(KeepAliveService.this);
                         preferenceManager.setSharedKey("undefined");
                         Toast.makeText(KeepAliveService.this, "CANNOT KEEP CONNECTION ALIVE. PLEASE, CHECK INTERNET CONNECTION", Toast.LENGTH_SHORT).show();

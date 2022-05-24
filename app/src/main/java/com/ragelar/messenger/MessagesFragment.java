@@ -10,59 +10,90 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MessagesFragment extends Fragment {
 
-    List<Dialog> dialogs = new ArrayList<>();
+    String userName;
+    List<Message> messages = new ArrayList<>();
+    Context appContext;
 
     public MessagesFragment() {
         // Required empty public constructor
     }
 
-    private void getDialogs(Context appContext){
-        class GetTask extends AsyncTask<Void, Void, List<Dialog>> {
-            @Override
-            protected List<Dialog> doInBackground(Void... voids) {
-                List<Dialog> dialogs = DatabaseClient.getInstance(appContext).getAppDatabase()
-                        .dialogDao().getAll();
+    class MessageComparator implements Comparator<Message> {
+        @Override
+        public int compare(Message message, Message t1) {
+            return (int) (message.getTimestamp() - t1.getTimestamp());
+        }
+    }
 
-                return dialogs;
+    private void setMessages(List<Message> messages){
+        this.messages.clear();
+        this.messages.addAll(messages);
+        this.messages.sort(new MessageComparator());
+    }
+
+    private void getMessages(Context appContext, String userName){
+        class GetTask extends AsyncTask<Void, Void, List<Message>>{
+
+            @Override
+            protected List<Message> doInBackground(Void... voids) {
+                List<Message> messages = DatabaseClient.getInstance(appContext).getAppDatabase()
+                        .messageDao().getMessagesFromUser(userName);
+
+                return messages;
+            }
+
+            @Override
+            protected void onPostExecute(List<Message> messages) {
+                super.onPostExecute(messages);
+                //setMessages(messages);
             }
         }
 
         GetTask getTask = new GetTask();
         getTask.execute();
 
-        try {
-            this.dialogs = getTask.get();
-        } catch (ExecutionException e) {
+        try{
+            this.messages.clear();
+            this.messages.addAll(getTask.get());
+            this.messages.sort(new MessageComparator());
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
-            Toast.makeText(appContext, "Ошибка при загрузке списка диалогов. Пожалуйста, попробуйте ещё раз", Toast.LENGTH_SHORT).show();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Toast.makeText(appContext, "Ошибка при загрузке списка диалогов. Пожалуйста, попробуйте ещё раз", Toast.LENGTH_SHORT).show();
+            Toast.makeText(appContext, "Ошибка при загрузке списка сообщений. Пожалуйста, попробуйте открыть диалог ещё раз", Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
-    private void insertDialog(Context appContext){
-        class InsertTask extends AsyncTask<Void, Void, Void> {
+    private void insertMessage(Context appContext, Message message){
+        class InsertTask extends AsyncTask<Message, Void, Void> {
+
             @Override
-            protected Void doInBackground(Void... voids) {
-                Dialog dialog = new Dialog();
-
-                dialog.setDialogId(90);
-                dialog.setUserName("TEST");
-                dialog.setLastMessage("TEST LAST MESSAGE");
+            protected Void doInBackground(Message... messages) {
                 DatabaseClient.getInstance(appContext).getAppDatabase()
-                        .dialogDao().addDialog(dialog);
-
+                        .messageDao().addMessage(message);
                 return null;
             }
         }
@@ -71,27 +102,123 @@ public class MessagesFragment extends Fragment {
         insertTask.execute();
     }
 
+    private String getSharedKey(Context appContext, String userName) {
+        class GetTask extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... strings) {
+                return DatabaseClient.getInstance(appContext).getAppDatabase()
+                        .dialogDao().getSharedKeyForUser(userName);
+
+            }
+        }
+
+        GetTask task = new GetTask();
+        task.execute(userName);
+
+        try {
+            return task.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return "undefined";
+        }
+    }
 
 
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_messages, container, false);
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView recyclerView = view.findViewById(R.id.dialogs_l);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        if(getArguments() != null) {
+            MessagesFragmentArgs args = MessagesFragmentArgs.fromBundle(getArguments());
+            userName = args.getUserName();
+        }
+        appContext = this.getActivity().getApplicationContext();
 
-        getDialogs(this.getActivity().getApplicationContext());
-        DialogApadter adapter = new DialogApadter(this.getContext(), this.dialogs);
+        TextView recepientTextView = view.findViewById(R.id.recepientTextView);
+        recepientTextView.setText(" " + this.userName);
+        RecyclerView recyclerView = view.findViewById(R.id.messagesContainer);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
+        getMessages(appContext, userName);
+        MessageAdapter adapter = new MessageAdapter(this.getContext(), this.messages);
         recyclerView.setAdapter(adapter);
 
-        Button testButton = view.findViewById(R.id.button2);
+        Handler handler = new Handler();
+        Runnable refreshAdapterTask = new Runnable() {
+            @Override
+            public void run() {
+                getMessages(appContext, userName);
+                adapter.notifyDataSetChanged();
+                recyclerView.scrollToPosition(adapter.getItemCount()-1);
+                handler.postDelayed(this, 5000);
+            }
+        };
 
-        testButton.setOnClickListener(v -> {
-            insertDialog(this.getActivity().getApplicationContext());
+        refreshAdapterTask.run();
+
+        ImageButton sendMessageButton = view.findViewById(R.id.sendMessageButton);
+        sendMessageButton.setOnClickListener(v -> {
+            PreferenceManager preferenceManager = new PreferenceManager(getContext());
+            EditText inputMessage = view.findViewById(R.id.inputMessageEditText);
+            BigInteger sharedKey = new BigInteger(getSharedKey(appContext, userName));
+            ANomalUSProvider anomalusProvider = new ANomalUSProvider();
+            Sanitizer sanitizer = new Sanitizer();
+
+            String messageToSend = inputMessage.getText().toString();
+
+            if(messageToSend.length() > 50){
+                Toast.makeText(appContext, "Длина сообщения не может превышать 50 символов", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            byte[] bytesToEncode = messageToSend.getBytes(StandardCharsets.UTF_8);
+            byte[] encodedBytes = anomalusProvider.encodeBytes(bytesToEncode, sharedKey);
+
+            JSONObject jsonResponse = CommunicatorClient.sendSendRequest(preferenceManager.getSession(), userName,
+                    preferenceManager.getUserName(), "text", sanitizer.sanitize(encodedBytes),
+                    preferenceManager.getSharedKey());
+
+            String newTimestamp = "";
+            try {
+                if(jsonResponse.getString("result").equals("OK")) {
+                    JSONObject jsonData = jsonResponse.getJSONObject("data");
+                    newTimestamp = jsonData.getString(Constants.SEND_TIMESTAMP_HEADER);
+
+                }
+                else{
+                    Toast.makeText(getContext(), "Что-то пошло не так при отправке сообщения...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), jsonResponse.getString(Constants.ADDITIONAL_INFO_HEADER), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Что-то пошло не так при отправке сообщения...", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Message messageToInsert = new Message();
+            messageToInsert.setTo(userName);
+            messageToInsert.setFrom("me");
+            messageToInsert.setMessageType("text");
+            messageToInsert.setTimestamp(Long.valueOf(newTimestamp));
+            messageToInsert.setData(messageToSend);
+
+            insertMessage(appContext, messageToInsert);
+            inputMessage.getText().clear();
+            adapter.notifyDataSetChanged();
         });
-
 
     }
 

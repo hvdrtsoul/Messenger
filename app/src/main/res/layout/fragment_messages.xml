@@ -3,31 +3,59 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout5"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".MessagesFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/dialogs_l"
-        android:layout_width="409dp"
+    <EditText
+        android:id="@+id/inputMessageEditText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
+        android:layout_marginEnd="64dp"
+        android:background="@drawable/rounded_textview"
+        android:ems="10"
+        android:fontFamily="sans-serif"
+        android:inputType="text"
+        android:textAlignment="viewStart"
+        android:textAllCaps="true"
+        android:textColor="@color/cool_black"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messagesContainer"
+        tools:text="!nickname" />
+
+    <TextView
+        android:id="@+id/recepientTextView"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/rounded_bottom_text"
+        android:fontFamily="sans-serif-light"
+        android:textAlignment="viewStart"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:listitem="@layout/fragment_dialog" />
+        tools:text=" USERNAME" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:text="Button"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messagesContainer"
+        android:layout_width="409dp"
+        android:layout_height="656dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/recepientTextView" />
+
+    <ImageButton
+        android:id="@+id/sendMessageButton"
+        android:layout_width="65dp"
+        android:layout_height="35dp"
+        android:src="@drawable/communication"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messagesContainer" />
 </androidx.constraintlayout.widget.ConstraintLayout>

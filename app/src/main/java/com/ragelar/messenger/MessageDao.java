@@ -13,7 +13,7 @@ public interface MessageDao {
     @Query("SELECT * FROM message")
     List<Message> getAll();
 
-    @Query("SELECT * FROM message WHERE `from` = :userName")
+    @Query("SELECT * FROM message WHERE `from` = :userName OR `to` = :userName")
     List<Message> getMessagesFromUser(String userName);
 
     @Insert

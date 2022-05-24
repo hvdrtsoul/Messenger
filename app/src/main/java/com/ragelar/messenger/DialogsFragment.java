@@ -12,11 +12,16 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +32,7 @@ import java.util.concurrent.ExecutionException;
  * Use the {@link DialogsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DialogsFragment extends Fragment {
+public class DialogsFragment extends Fragment implements DialogApadter.OnDialogListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,6 +44,8 @@ public class DialogsFragment extends Fragment {
     private String mParam2;
 
     List<Dialog> dialogs = new ArrayList<>();
+    Context appContext;
+    NavController navController;
 
     public DialogsFragment() {
         // Required empty public constructor
@@ -81,6 +88,11 @@ public class DialogsFragment extends Fragment {
         insertTask.execute();
     }
 
+    void setDialogs(List<Dialog> newDialog){
+        this.dialogs.clear();
+        this.dialogs.addAll(newDialog);
+    }
+
     private void getDialogs(Context appContext){
         class GetTask extends AsyncTask<Void, Void, List<Dialog>> {
             @Override
@@ -90,20 +102,26 @@ public class DialogsFragment extends Fragment {
 
                 return dialogs;
             }
+
+            @Override
+            protected void onPostExecute(List<Dialog> dialogs) {
+                super.onPostExecute(dialogs);
+                //setDialogs(dialogs);
+            }
         }
 
         GetTask getTask = new GetTask();
         getTask.execute();
 
         try {
-            this.dialogs = getTask.get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            Toast.makeText(appContext, "Ошибка при загрузке списка диалогов. Пожалуйста, попробуйте ещё раз", Toast.LENGTH_SHORT).show();
-        } catch (InterruptedException e) {
+            this.dialogs.clear();
+            this.dialogs.addAll(getTask.get());
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             Toast.makeText(appContext, "Ошибка при загрузке списка диалогов. Пожалуйста, попробуйте ещё раз", Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
     @Override
@@ -126,19 +144,38 @@ public class DialogsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        appContext = this.getActivity().getApplicationContext();
+        navController = Navigation.findNavController(view);
 
         RecyclerView recyclerView = view.findViewById(R.id.dialogs_list);
         Button addDialogButton = view.findViewById(R.id.addDialogButton);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        getDialogs(this.getActivity().getApplicationContext());
-        DialogApadter adapter = new DialogApadter(this.getContext(), this.dialogs);
+        getDialogs(appContext);
+        DialogApadter adapter = new DialogApadter(this.getContext(), this.dialogs, this);
         recyclerView.setAdapter(adapter);
 
+        Handler handler = new Handler();
+        Runnable refreshAdapterTask = new Runnable() {
+            @Override
+            public void run() {
+                        getDialogs(appContext);
+                        adapter.notifyDataSetChanged();
+                        handler.postDelayed(this, 5000);
+                    }
+            };
+
+        refreshAdapterTask.run();
+
         addDialogButton.setOnClickListener(v -> {
-            final NavController navController = Navigation.findNavController(view);
             navController.navigate(R.id.action_dialogsFragment_to_addDialogFragment);
         });
+    }
+
+    @Override
+    public void onDialogCLick(int position) {
+        DialogsFragmentDirections.ActionDialogsFragmentToMessagesFragment action = DialogsFragmentDirections.actionDialogsFragmentToMessagesFragment();
+        action.setUserName(dialogs.get(position).getUserName());
+        navController.navigate(action);
     }
 }

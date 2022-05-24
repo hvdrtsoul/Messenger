@@ -35,10 +35,23 @@
             app:exitAnim="@android:anim/fade_out"
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_dialogsFragment_to_messagesFragment"
+            app:destination="@id/messagesFragment" />
     </fragment>
     <fragment
         android:id="@+id/addDialogFragment"
         android:name="com.ragelar.messenger.AddDialogFragment"
         android:label="fragment_add_dialog"
         tools:layout="@layout/fragment_add_dialog" />
+    <fragment
+        android:id="@+id/messagesFragment"
+        android:name="com.ragelar.messenger.MessagesFragment"
+        android:label="fragment_messages"
+        tools:layout="@layout/fragment_messages" >
+        <argument
+            android:name="userName"
+            app:argType="string"
+            android:defaultValue='undefined' />
+    </fragment>
 </navigation>
