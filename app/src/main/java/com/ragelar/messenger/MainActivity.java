@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
         String userName = preferenceManager.getUserName();
 
-        Toast.makeText(this, userName, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, userName, Toast.LENGTH_SHORT).show();
 
 
     }

@@ -43,12 +43,12 @@ public class AuthService extends Service {
                         challenge = data.getString(Constants.AUTH_CHALLENGE_HEADER);
                     }
                     else{
-                       Toast.makeText(AuthService.this, "Не могу авторизоваться на сервере. Проверьте подключение к интернету или войдите в систему заново", Toast.LENGTH_LONG);
+                       Toast.makeText(AuthService.this, "Не могу авторизоваться на сервере. Проверьте подключение к интернету или войдите в систему заново", Toast.LENGTH_LONG).show();
                         handler.postDelayed(this, 300_000);
                         return;
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(AuthService.this, "Не могу авторизоваться на сервере. Проверьте подключение к интернету или войдите в систему заново", Toast.LENGTH_LONG);
+                    Toast.makeText(AuthService.this, "Не могу авторизоваться на сервере. Проверьте подключение к интернету или войдите в систему заново", Toast.LENGTH_LONG).show();
                     handler.postDelayed(this, 300_000);
                     return;
                 }
@@ -68,7 +68,7 @@ public class AuthService extends Service {
                         String newSession = data.getString(Constants.TWISTED_NEW_SESSION_HEADER);
 
                         preferenceManager.setSession(newSession);
-                        Toast.makeText(AuthService.this, "Авторизация прошла успешно", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(AuthService.this, "Авторизация прошла успешно", Toast.LENGTH_LONG).show();
                         handler.postDelayed(this, 600_000);
                         return;
                     }
@@ -76,7 +76,7 @@ public class AuthService extends Service {
 
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(AuthService.this, "Не могу авторизоваться на сервере. Проверьте подключение к интернету или войдите в систему заново", Toast.LENGTH_LONG);
+                    Toast.makeText(AuthService.this, "Не могу авторизоваться на сервере. Проверьте подключение к интернету или войдите в систему заново", Toast.LENGTH_LONG).show();
                     handler.postDelayed(this, 300_000);
                     return;
                 }
