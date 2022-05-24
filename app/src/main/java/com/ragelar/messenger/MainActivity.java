@@ -12,6 +12,7 @@ import androidx.room.Room;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.widget.Toast;
 
@@ -100,8 +101,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intention = new Intent(MainActivity.this, AuthService.class);
         startService(intention);
 
-        Intent getMessagesIntention = new Intent(MainActivity.this, GetMessagesService.class);
-        startService(getMessagesIntention);
+        GetMessagesHandler getMessagesHandler = new GetMessagesHandler(this.getApplicationContext());
+        getMessagesHandler.start();
+
     }
 
     @Override

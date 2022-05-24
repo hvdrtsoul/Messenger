@@ -1,16 +1,13 @@
 package com.ragelar.messenger;
 
-import android.app.IntentService;
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.os.IBinder;
+import android.os.Looper;
+import android.os.SystemClock;
+import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
-
-import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,91 +16,14 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
 
-@SuppressWarnings("ALL")
-public class GetMessagesService extends IntentService {
-    public GetMessagesService() {
-        super("GetMessageService");
-    }
+public class GetMessagesHandler extends Thread{
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    Context appContext;
+    PreferenceManager preferenceManager;
 
-    @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-
-        Handler handler = new Handler();
-        PreferenceManager preferenceManager = new PreferenceManager(GetMessagesService.this);
-        Runnable getMessagesTask = new Runnable() {
-            @Override
-            public void run() {
-                JSONObject jsonResponse = CommunicatorClient.sendCheckMailRequest(preferenceManager.getUserName(), preferenceManager.getSession(), preferenceManager.getSharedKey());
-                String messages = "";
-
-                try {
-                    if(jsonResponse.getString("result").equals("OK")) {
-                        JSONObject data = jsonResponse.getJSONObject("data");
-                        messages = data.getString(Constants.CHECK_MAIL_MESSAGES_HEADER_NAME);//Toast.makeText(KeepAliveService.this, "KEEP ALIVE", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        handler.postDelayed(this, 7000);
-                        Toast.makeText(GetMessagesService.this, "Что-то пошло не так при получении новых сообщений...", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(GetMessagesService.this, "Что-то пошло не так при получении новых сообщений...", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if(messages.equals(Constants.CHECK_MAIL_NO_MESSAGES)){
-                    handler.postDelayed(this, 7000);
-                    return;
-                }
-
-                String[] messagesIds = messages.split(String.valueOf(Constants.CHECK_MAIL_SEPARATOR));
-
-                for(String messageId : messagesIds){
-
-                    jsonResponse = CommunicatorClient.sendGetMessageRequest(preferenceManager.getUserName(), preferenceManager.getSession(),
-                            messageId, preferenceManager.getSharedKey());
-
-                    try {
-                        if(jsonResponse.getString("result").equals("OK")) {
-                            JSONObject data = jsonResponse.getJSONObject("data");
-
-                            String messageFrom = data.getString(Constants.GET_MESSAGE_FROM_HEADER);
-                            String messageType = data.getString(Constants.GET_MESSAGE_TYPE_HEADER);
-                            String messageTimestamp = data.getString(Constants.GET_MESSAGE_TIMESTAMP_HEADER);
-                            String messageData = data.getString(Constants.GET_MESSAGE_DATA_HEADER);
-
-                            handleIncomingMessage(messageFrom, messageType, messageTimestamp, messageData);
-                            handler.postDelayed(this, 7000);
-                            return;
-                        }
-                        else{
-                            handler.postDelayed(this, 7000);
-                            Toast.makeText(GetMessagesService.this, "Что-то пошло не так при получении новых сообщений...", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        handler.postDelayed(this, 7000);
-                        Toast.makeText(GetMessagesService.this, "Что-то пошло не так при получении новых сообщений...", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-            }
-        };
-        getMessagesTask.run();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return Service.START_STICKY;
+    GetMessagesHandler(Context appContext){
+        this.appContext = appContext;
+        this.preferenceManager = new PreferenceManager(appContext);
     }
 
     private void insertDialog(Context appContext, Dialog dialog) {
@@ -221,11 +141,33 @@ public class GetMessagesService extends IntentService {
         task.execute(info);
     }
 
+    private Boolean dialogExists(Context appContext, String userName) {
+        class GetTask extends AsyncTask<String, Void, Boolean> {
+
+            @Override
+            protected Boolean doInBackground(String... strings) {
+                return DatabaseClient.getInstance(appContext).getAppDatabase()
+                        .dialogDao().dialogExists(userName);
+
+            }
+        }
+
+        GetTask task = new GetTask();
+        task.execute(userName);
+
+        try {
+            return task.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+            return true;
+        }
+    }
+
     private void handleIncomingMessage(String from, String type, String timestamp, String data){
         Sanitizer sanitizer = new Sanitizer();
 
         if(type.equals("request")){ // if it's a request
-            PreferenceManager preferenceManager = new PreferenceManager(GetMessagesService.this);
+            PreferenceManager preferenceManager = new PreferenceManager(appContext);
             DFHProvider dfhProvider = new DFHProvider();
             BigInteger myPrivateKey = dfhProvider.generatePrivateKey();
             BigInteger myPublicKey = dfhProvider.generatePublicKey(myPrivateKey);
@@ -244,13 +186,12 @@ public class GetMessagesService extends IntentService {
 
                 }
                 else{
-                    Toast.makeText(GetMessagesService.this, "Что-то пошло не так при обмене ключами...", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(GetMessagesService.this, "Что-то пошло не так при обмене ключами...", Toast.LENGTH_SHORT).show();
+
                 return;
             }
 
@@ -274,16 +215,20 @@ public class GetMessagesService extends IntentService {
             dialogToAdd.setUserName(from);
             dialogToAdd.setLastMessage("ОТПРАВЛЕН ОТВЕТ");
 
-            insertDialog(GetMessagesService.this, dialogToAdd);
-            insertMessage(GetMessagesService.this, incomingRequest);
-            insertMessage(GetMessagesService.this, outcomingAnswer);
+            insertDialog(appContext, dialogToAdd);
+            insertMessage(appContext, incomingRequest);
+            insertMessage(appContext, outcomingAnswer);
         }else if(type.equals("answer")){ // if it's a answer on request, dialog already exists
-            String myPrivateKey = getPrivateKey(GetMessagesService.this, from);
+
+            if(!dialogExists(appContext, from))
+                return;
+
+            String myPrivateKey = getPrivateKey(appContext, from);
             BigInteger hisPublicKey = new BigInteger(sanitizer.unSanitize(data));
             DFHProvider dfhProvider = new DFHProvider();
             BigInteger sharedKey = dfhProvider.generateSharedKey(new BigInteger(myPrivateKey), hisPublicKey);
 
-            setSharedKey(GetMessagesService.this, Pair.create(from, sharedKey.toString()));
+            setSharedKey(appContext, Pair.create(from, sharedKey.toString()));
 
             Message incomingMessage = new Message();
             incomingMessage.setTo("me");
@@ -292,10 +237,13 @@ public class GetMessagesService extends IntentService {
             incomingMessage.setTimestamp(Long.valueOf(timestamp));
             incomingMessage.setData("ПОЛУЧЕН ОТВЕТ");
 
-            insertMessage(GetMessagesService.this, incomingMessage);
-            setLastMessage(GetMessagesService.this, Pair.create(from, "ПОЛУЧЕН ОТВЕТ"));
+            insertMessage(appContext, incomingMessage);
+            setLastMessage(appContext, Pair.create(from, "ПОЛУЧЕН ОТВЕТ"));
         }else{
-            String sharedKey = getSharedKey(GetMessagesService.this, from);
+            if(!dialogExists(appContext, from))
+                return;
+
+            String sharedKey = getSharedKey(appContext, from);
             byte[] messageBytes = sanitizer.unSanitize(data);
             ANomalUSProvider anomalusProvider = new ANomalUSProvider();
 
@@ -309,15 +257,60 @@ public class GetMessagesService extends IntentService {
             incomingMessage.setTimestamp(Long.valueOf(timestamp));
             incomingMessage.setData(message);
 
-            insertMessage(GetMessagesService.this, incomingMessage);
-            setLastMessage(GetMessagesService.this, Pair.create(from, message));
+            insertMessage(appContext, incomingMessage);
+            setLastMessage(appContext, Pair.create(from, message));
         }
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
+    public void run() {
+        while(true){
+                Log.d("TEST", "GETTING MESSAGES");
+                JSONObject jsonResponse = CommunicatorClient.sendCheckMailRequest(preferenceManager.getUserName(), preferenceManager.getSession(), preferenceManager.getSharedKey());
+                String messages = "";
+
+                try {
+                    if(jsonResponse.getString("result").equals("OK")) {
+                        JSONObject data = jsonResponse.getJSONObject("data");
+                        messages = data.getString(Constants.CHECK_MAIL_MESSAGES_HEADER_NAME);//Toast.makeText(KeepAliveService.this, "KEEP ALIVE", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        continue;
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+
+                if(messages.equals(Constants.CHECK_MAIL_NO_MESSAGES)){
+                    continue;
+                }
+
+                String[] messagesIds = messages.split(String.valueOf(Constants.CHECK_MAIL_SEPARATOR));
+
+                for(String messageId : messagesIds){
+
+                    jsonResponse = CommunicatorClient.sendGetMessageRequest(preferenceManager.getUserName(), preferenceManager.getSession(),
+                            messageId, preferenceManager.getSharedKey());
+
+                    try {
+                        if(jsonResponse.getString("result").equals("OK")) {
+                            JSONObject data = jsonResponse.getJSONObject("data");
+
+                            String messageFrom = data.getString(Constants.GET_MESSAGE_FROM_HEADER);
+                            String messageType = data.getString(Constants.GET_MESSAGE_TYPE_HEADER);
+                            String messageTimestamp = data.getString(Constants.GET_MESSAGE_TIMESTAMP_HEADER);
+                            String messageData = data.getString(Constants.GET_MESSAGE_DATA_HEADER);
+
+                            handleIncomingMessage(messageFrom, messageType, messageTimestamp, messageData);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            SystemClock.sleep(1000);
+        }
 
     }
-
 }

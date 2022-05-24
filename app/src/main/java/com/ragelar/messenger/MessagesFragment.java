@@ -161,7 +161,7 @@ public class MessagesFragment extends Fragment {
                 getMessages(appContext, userName);
                 adapter.notifyDataSetChanged();
                 recyclerView.scrollToPosition(adapter.getItemCount()-1);
-                handler.postDelayed(this, 5000);
+                handler.postDelayed(this, 1000);
             }
         };
 
