@@ -9,15 +9,15 @@
         <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/drawable/rounded_cornew_dialog.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/drawable/rounded_textview.xml" value="0.195" />
         <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/activity_login.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/activity_main.xml" value="0.1358695652173913" />
+        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/activity_main.xml" value="0.16666666666666666" />
         <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_add_dialog.xml" value="0.12" />
         <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_dialog.xml" value="0.4466666666666667" />
         <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_dialogs.xml" value="0.14666666666666667" />
         <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_greeting.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_log_in.xml" value="0.16666666666666666" />
         <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_message.xml" value="0.16666666666666666" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_messages.xml" value="0.3333333333333333" />
-        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_secret_phrase.xml" value="0.14666666666666667" />
+        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_messages.xml" value="0.16666666666666666" />
+        <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_secret_phrase.xml" value="0.16666666666666666" />
         <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_set_nick_name.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_settings.xml" value="0.16666666666666666" />
         <entry key="..\:/AndroidStudioProjects/Messenger/app/src/main/res/layout/fragment_user_name.xml" value="0.1358695652173913" />

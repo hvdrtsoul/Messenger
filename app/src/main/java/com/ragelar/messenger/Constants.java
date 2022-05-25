@@ -54,7 +54,7 @@ public class Constants {
     public static final int USERNAME_LENGTH = 15;
     public static final int SESSION_LENGTH = 30;
     public static final int NICKNAME_MIN_LENGTH = 3;
-    public static final int NICKNAME_MAX_LENGTH = 10;
+    public static final int NICKNAME_MAX_LENGTH = 15;
     public static final int SECRET_LENGTH = 25;
 
     public static final String JOIN_US_ERROR = "ERR";

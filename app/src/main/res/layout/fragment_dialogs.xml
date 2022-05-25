@@ -9,8 +9,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dialogs_list"
-        android:layout_width="390dp"
-        android:layout_height="700dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:focusableInTouchMode="false"
         android:isScrollContainer="false"
         android:scrollbars="horizontal"

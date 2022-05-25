@@ -1,30 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MessagesFragment">
 
-    <EditText
-        android:id="@+id/inputMessageEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="64dp"
-        android:background="@drawable/rounded_textview"
-        android:ems="10"
-        android:fontFamily="sans-serif"
-        android:inputType="text"
-        android:textAlignment="viewStart"
-        android:textAllCaps="true"
-        android:textColor="@color/cool_black"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="!nickname" />
+
 
     <TextView
         android:id="@+id/recepientTextView"
@@ -34,27 +18,41 @@
         android:fontFamily="sans-serif-light"
         android:textAlignment="viewStart"
         android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text=" USERNAME" />
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messagesContainer"
-        android:layout_width="409dp"
-        android:layout_height="650dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/inputMessageEditText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recepientTextView" />
+        android:layout_weight="1"
+        tools:listitem="@layout/fragment_message"
+        />
 
-    <ImageButton
-        android:id="@+id/sendMessageButton"
-        android:layout_width="65dp"
-        android:layout_height="35dp"
-        android:src="@drawable/communication"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/inputMessageEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_textview"
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:inputType="text"
+            android:textAlignment="viewStart"
+            android:textAllCaps="true"
+            android:textColor="@color/cool_black"
+            android:textSize="24sp" />
+
+        <ImageButton
+            android:id="@+id/sendMessageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/communication" />
+    </LinearLayout>
+
+
+
+</LinearLayout>

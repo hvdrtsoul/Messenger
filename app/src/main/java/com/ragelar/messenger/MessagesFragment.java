@@ -244,7 +244,7 @@ public class MessagesFragment extends Fragment {
 
             insertMessage(appContext, messageToInsert);
             setLastMessage(appContext, Pair.create(userName, messageToSend));
-            inputMessage.getText().clear();
+            inputMessage.getText().clear(); // TODO: put higher
             adapter.notifyDataSetChanged();
         });
 
